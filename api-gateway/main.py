@@ -1,7 +1,18 @@
 from fastapi import FastAPI, Header, HTTPException, Request
 import httpx
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Password Manager - API Gateway")
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],              # In production change to ["http://localhost:8080"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 AUTH_SERVICE = "http://auth:8000"
 VAULT_SERVICE = "http://vault:8000"

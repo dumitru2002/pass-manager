@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Password Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🔒 Password Manager</h1>
+
+    <!-- Login / Register -->
+    <div id="auth">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button id="login">Login</button>
+      <button id="register">Register</button>
+      <p id="auth-msg"></p>
+    </div>
+
+    <!-- Main app (hidden until login) -->
+    <div id="app" class="hidden">
+      <button id="logout">Logout</button>
+      <h2>Your Passwords</h2>
+
+      <div class="add-form">
+        <input type="text" id="site" placeholder="Site (e.g. github.com)" required />
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="pass" placeholder="Password" required />
+        <button id="add">Add Password</button>
+      </div>
+
+      <ul id="list"></ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
