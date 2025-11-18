@@ -62,6 +62,7 @@ def list_all(email: str = Depends(get_current_user), db: Session = Depends(get_d
     my_entries = db.query(PasswordEntry).filter(PasswordEntry.user_email == email).all()
 
     # Shared with me — call share service with my email as query param
+    # Shared with me
     import httpx
     try:
         shared_resp = httpx.get(f"http://share:8000/shared-with-me?to_email={email}")
