@@ -81,3 +81,33 @@ async function loadPasswords() {
     </li>
   `).join("");
 }
+
+async function loadPasswords() {
+  const res = await fetch(`${API}/passwords`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  const passwords = await res.json();
+  const list = document.getElementById("list");
+  list.innerHTML = passwords.map(p => `
+    <li>
+      <strong>${p.site}</strong> ${p.note ? '<span style="color:#28a745;font-size:0.9em">(' + p.note + ')</span>' : ''}
+      <br>Username: ${p.username}
+      <br>Password: <span style="font-family:monospace;background:#f0f0f0;padding:2px 6px;border-radius:4px">${p.password}</span>
+      ${p.note ? '' : `<button onclick="sharePassword(${p.id})" style="float:right;background:#ffc107;color:black;padding:5px 10px;border:none;border-radius:4px;cursor:pointer">Share</button>`}
+    </li>
+  `).join("");
+}
+
+function sharePassword(id) {
+  const email = prompt("Enter email to share with:");
+  if (email && email.includes("@")) {
+    fetch(`${API}/share`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ to_email: email, password_id: id })
+    }).then(r => r.json()).then(d => alert(d.msg || "Shared!"));
+  }
+}

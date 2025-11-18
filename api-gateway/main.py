@@ -67,3 +67,10 @@ async def list_passwords(request: Request, authorization: str = Header(None)):
     if not authorization:
         raise HTTPException(401, "Missing token")
     return await forward("/passwords", request, VAULT_SERVICE, authorization)
+
+@app.post("/share")
+@app.post("/share/")
+async def share_password(request: Request, authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(401, "Missing token")
+    return await forward("/share", request, "http://share:8000", authorization)

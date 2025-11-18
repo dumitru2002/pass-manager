@@ -30,3 +30,9 @@ services:
       - "8080:80"               # open http://localhost:8080
     depends_on:
       - gateway
+
+  share:
+    build: ./share-service
+    depends_on:
+      - vault
+      - auth
