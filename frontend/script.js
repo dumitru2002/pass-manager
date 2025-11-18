@@ -10,9 +10,24 @@ function showApp() {
 function showAuth() {
   document.getElementById("app").classList.add("hidden");
   document.getElementById("auth").classList.remove("hidden");
+  document.getElementById("list").innerHTML = ""; // clear old passwords
 }
 
-if (token) showApp();
+// Check if token is valid on page load
+async function checkToken() {
+  if (!token) return showAuth();
+  const res = await fetch(`${API}/passwords`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  if (res.ok) {
+    showApp();
+  } else {
+    localStorage.removeItem("token");
+    token = null;
+    showAuth();
+  }
+}
+checkToken(); // ← THIS IS THE KEY LINE
 
 document.getElementById("login").onclick = async () => {
   const email = document.getElementById("email").value;
@@ -23,24 +38,27 @@ document.getElementById("login").onclick = async () => {
     body: JSON.stringify({ email, password })
   });
   const data = await res.json();
+
   if (data.access_token) {
     token = data.access_token;
     localStorage.setItem("token", token);
     showApp();
   } else {
-    document.getElementById("auth-msg").textContent = "Login failed";
+    document.getElementById("auth-msg").textContent = "Wrong email or password!";
   }
 };
 
 document.getElementById("register").onclick = async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  await fetch(`${API}/register`, {
+  const res = await fetch(`${API}/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   });
-  document.getElementById("auth-msg").textContent = "Registered! Now login";
+  if (res.ok) {
+    document.getElementById("auth-msg").textContent = "Registered! Now login";
+  }
 };
 
 document.getElementById("logout").onclick = () => {
@@ -53,7 +71,7 @@ document.getElementById("add").onclick = async () => {
   const site = document.getElementById("site").value;
   const username = document.getElementById("username").value;
   const pass = document.getElementById("pass").value;
-  await fetch(`${API}/passwords`, {
+  const res = await fetch(`${API}/passwords`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -61,31 +79,27 @@ document.getElementById("add").onclick = async () => {
     },
     body: JSON.stringify({ site, username, password: pass })
   });
-  document.getElementById("site").value = "";
-  document.getElementById("username").value = "";
-  document.getElementById("pass").value = "";
-  loadPasswords();
+  if (res.ok) {
+    document.getElementById("site").value = "";
+    document.getElementById("username").value = "";
+    document.getElementById("pass").value = "";
+    loadPasswords();
+  } else {
+    alert("Session expired – please login again");
+    showAuth();
+  }
 };
 
 async function loadPasswords() {
   const res = await fetch(`${API}/passwords`, {
     headers: { "Authorization": `Bearer ${token}` }
   });
-  const passwords = await res.json();
-  const list = document.getElementById("list");
-  list.innerHTML = passwords.map(p => `
-    <li>
-      <strong>${p.site}</strong><br>
-      Username: ${p.username}<br>
-      Password: <span style="font-family:monospace">${p.password}</span>
-    </li>
-  `).join("");
-}
-
-async function loadPasswords() {
-  const res = await fetch(`${API}/passwords`, {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
+  if (!res.ok) {
+    localStorage.removeItem("token");
+    token = null;
+    showAuth();
+    return;
+  }
   const passwords = await res.json();
   const list = document.getElementById("list");
   list.innerHTML = passwords.map(p => `
@@ -109,6 +123,6 @@ function sharePassword(id) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ to_email: email, password_id: id })
-    }).then(r => r.json()).then(d => alert(d.msg || "Shared!"));
+    }).then(r => r.json()).then(d => alert(d.msg || "Shared!")).catch(() => alert("Error – login again"));
   }
 }
