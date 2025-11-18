@@ -90,10 +90,11 @@ async function loadPasswords() {
   const list = document.getElementById("list");
   list.innerHTML = passwords.map(p => `
     <li>
-      <strong>${p.site}</strong> ${p.note ? '<span style="color:#28a745;font-size:0.9em">(' + p.note + ')</span>' : ''}
+      <strong>${p.site}</strong> 
+      ${p.note ? '<span style="color:#28a745;font-size:0.9em">(' + p.note + ')</span>' : ''}
       <br>Username: ${p.username}
       <br>Password: <span style="font-family:monospace;background:#f0f0f0;padding:2px 6px;border-radius:4px">${p.password}</span>
-      ${p.note ? '' : `<button onclick="sharePassword(${p.id})" style="float:right;background:#ffc107;color:black;padding:5px 10px;border:none;border-radius:4px;cursor:pointer">Share</button>`}
+      ${p.note ? '' : `<button onclick="sharePassword(${p.id})" style="float:right;background:#ffc107;color:black;padding:5px 10px;border:none;border-radius:4px;cursor:pointer;margin-top:8px">Share</button>`}
     </li>
   `).join("");
 }
