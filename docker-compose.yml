@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - auth
+      - vault
+      - audit
+
+  auth:
+    build: ./auth-service
+    ports:
+      - "8001:8000"
+
+  vault:
+    build: ./vault-service
+    ports:
+      - "8002:8000"
+
+  audit:
+    build: ./audit-service
+    ports:
+      - "8003:8000"
