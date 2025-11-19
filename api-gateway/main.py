@@ -88,3 +88,10 @@ async def update_password(password_id: int, request: Request, authorization: str
     if not authorization:
         raise HTTPException(401, "Missing token")
     return await forward(f"/passwords/{password_id}", request, VAULT_SERVICE, authorization)
+
+
+@app.get("/generate-password")
+@app.post("/check-strength")
+async def utils_routes(request: Request, authorization: str = Header(None)):
+    # No auth needed for generator
+    return await forward(request.scope["path"], request, VAULT_SERVICE)

@@ -188,3 +188,41 @@ function sharePassword(id) {
     .catch(() => alert("Error – try login again"));
   }
 }
+
+// Generate from backend
+document.getElementById("generate").onclick = async () => {
+  const res = await fetch(`${API}/generate-password?length=18`);
+  const data = await res.json();
+  document.getElementById("pass").value = data.password;
+  showStrength(data.strength);
+};
+
+// Live strength check from backend
+document.getElementById("pass").addEventListener("input", async () => {
+  const pass = document.getElementById("pass").value;
+  if (pass.length < 4) {
+    document.getElementById("strength-container").style.display = "none";
+    return;
+  }
+  const res = await fetch(`${API}/check-strength`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: pass })
+  });
+  if (res.ok) {
+    const data = await res.json();
+    showStrength(data.strength);
+  }
+});
+
+function showStrength(strength) {
+  const container = document.getElementById("strength-container");
+  const bar = document.getElementById("strength-bar");
+  const text = document.getElementById("strength-text");
+
+  container.style.display = "block";
+  bar.style.width = strength.percentage + "%";
+  bar.style.backgroundColor = strength.color;
+  text.textContent = strength.level;
+  text.style.color = strength.color;
+}

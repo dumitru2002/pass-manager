@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException, Header
+from jose import jwt
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from jose import jwt
+
 from models import SharedPassword, SessionLocal, Base, engine
 
 app = FastAPI(title="Share Service")

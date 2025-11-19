@@ -1,40 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Password Manager</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Password Manager</title>
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="container">
+<div class="container">
     <h1>🔒 Password Manager</h1>
 
     <!-- Login / Register -->
     <div id="auth">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button id="login">Login</button>
-      <button id="register">Register</button>
-      <p id="auth-msg"></p>
+        <input type="email" id="email" placeholder="Email" required/>
+        <input type="password" id="password" placeholder="Password" required/>
+        <button id="login">Login</button>
+        <button id="register">Register</button>
+        <p id="auth-msg"></p>
     </div>
 
     <!-- Main app (hidden until login) -->
     <div id="app" class="hidden">
-      <button id="logout">Logout</button>
-      <h2>Your Passwords</h2>
+        <button id="logout">Logout</button>
+        <h2>Your Passwords</h2>
 
-      <div class="add-form">
-        <input type="text" id="site" placeholder="Site (e.g. github.com)" required />
-        <input type="text" id="username" placeholder="Username" required />
-        <input type="password" id="pass" placeholder="Password" required />
-        <button id="add">Add Password</button>
-      </div>
+        <div class="add-form">
+            <input type="text" id="site" placeholder="Site (e.g. github.com)" required/>
+            <input type="text" id="username" placeholder="Username" required/>
 
-      <ul id="list"></ul>
+            <!-- Password + Generate button on the same line -->
+            <div style="display: flex; gap: 10px; margin: 15px 0; align-items: center;">
+                <input
+                        type="password"
+                        id="pass"
+                        placeholder="Password"
+                        required
+                        style="flex: 1; padding: 12px; font-size: 16px;"
+                />
+                <button
+                        type="button"
+                        id="generate"
+                        style="width: 10%; min-width: 160px; padding: 12px 20px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; white-space: nowrap;"
+                >
+                    Generate Strong
+                </button>
+            </div>
+
+            <!-- Strength meter -->
+            <div id="strength-container" style="margin: 10px 0; display: none;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden;">
+                        <div id="strength-bar" style="height: 100%; width: 0%; transition: all 0.4s ease;"></div>
+                    </div>
+                    <span id="strength-text" style="font-size: 14px; min-width: 100px; text-align: right;"></span>
+                </div>
+            </div>
+
+            <button id="add">Add Password</button>
+        </div>
+
+        <ul id="list"></ul>
     </div>
-  </div>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

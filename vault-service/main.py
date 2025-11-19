@@ -1,5 +1,5 @@
 import httpx
-from fastapi import FastAPI, Depends, HTTPException, Header
+from fastapi import FastAPI, Depends, HTTPException, Header, Body
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
@@ -116,3 +116,23 @@ def update_password(password_id: int, pw: PasswordIn, email: str = Depends(get_c
     entry.password_encrypted = encrypt(pw.password)
     db.commit()
     return {"msg": "Password updated", "id": entry.id}
+
+from utils import PasswordUtils
+
+@app.get("/generate-password")
+def generate_password(length: int = 16):
+    if length < 8 or length > 128:
+        raise HTTPException(400, "Length must be 8-128")
+    password = PasswordUtils.generate(length)
+    strength = PasswordUtils.strength(password)
+    return {
+        "password": password,
+        "strength": strength
+    }
+
+@app.post("/check-strength")
+def check_strength(password: str = Body(..., embed=True)):
+    if not password:
+        raise HTTPException(400, "Password required")
+    strength = PasswordUtils.strength(password)
+    return {"strength": strength}

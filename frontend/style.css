@@ -76,3 +76,11 @@ li {
 #auth-msg {
     color: red;
 }
+
+#generate:hover {
+    background: #218838 !important;
+}
+
+#strength-bar {
+    transition: width 0.4s ease, background-color 0.4s ease;
+}
