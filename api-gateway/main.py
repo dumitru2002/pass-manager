@@ -74,3 +74,17 @@ async def share_password(request: Request, authorization: str = Header(None)):
     if not authorization:
         raise HTTPException(401, "Missing token")
     return await forward("/share", request, "http://share:8000", authorization)
+
+@app.delete("/passwords/{password_id}")
+@app.delete("/passwords/{password_id}/")
+async def delete_password(password_id: int, request: Request, authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(401, "Missing token")
+    return await forward(f"/passwords/{password_id}", request, VAULT_SERVICE, authorization)
+
+@app.put("/passwords/{password_id}")
+@app.put("/passwords/{password_id}/")
+async def update_password(password_id: int, request: Request, authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(401, "Missing token")
+    return await forward(f"/passwords/{password_id}", request, VAULT_SERVICE, authorization)

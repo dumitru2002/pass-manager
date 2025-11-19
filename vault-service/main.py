@@ -92,3 +92,27 @@ def list_all(email: str = Depends(get_current_user), db: Session = Depends(get_d
             })
 
     return result
+
+
+@app.delete("/passwords/{password_id}")
+def delete_password(password_id: int, email: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    entry = db.query(PasswordEntry).filter(PasswordEntry.id == password_id, PasswordEntry.user_email == email).first()
+    if not entry:
+        raise HTTPException(404, "Password not found or not yours")
+    db.delete(entry)
+    db.commit()
+    return {"msg": "Password deleted"}
+
+
+@app.put("/passwords/{password_id}")
+def update_password(password_id: int, pw: PasswordIn, email: str = Depends(get_current_user),
+                    db: Session = Depends(get_db)):
+    entry = db.query(PasswordEntry).filter(PasswordEntry.id == password_id, PasswordEntry.user_email == email).first()
+    if not entry:
+        raise HTTPException(404, "Password not found or not yours")
+
+    entry.site = pw.site
+    entry.username = pw.username
+    entry.password_encrypted = encrypt(pw.password)
+    db.commit()
+    return {"msg": "Password updated", "id": entry.id}
