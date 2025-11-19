@@ -95,3 +95,17 @@ async def update_password(password_id: int, request: Request, authorization: str
 async def utils_routes(request: Request, authorization: str = Header(None)):
     # No auth needed for generator
     return await forward(request.scope["path"], request, VAULT_SERVICE)
+
+@app.post("/enable-2fa")
+@app.post("/enable-2fa/")
+async def enable_2fa_route(request: Request, authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(401, "Missing token")
+    return await forward("/enable-2fa", request, AUTH_SERVICE, authorization)
+
+@app.post("/disable-2fa")
+@app.post("/disable-2fa/")
+async def disable_2fa_route(request: Request, authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(401, "Missing token")
+    return await forward("/disable-2fa", request, AUTH_SERVICE, authorization)

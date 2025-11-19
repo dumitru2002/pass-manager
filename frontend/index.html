@@ -10,25 +10,36 @@
 <div class="container">
     <h1>🔒 Password Manager</h1>
 
-    <!-- Login / Register -->
+    <!-- AUTH FORM -->
     <div id="auth">
+        <h2>Login / Register</h2>
         <input type="email" id="email" placeholder="Email" required/>
         <input type="password" id="password" placeholder="Password" required/>
-        <button id="login">Login</button>
-        <button id="register">Register</button>
-        <p id="auth-msg"></p>
+
+        <input
+                type="text"
+                id="totp_code"
+                placeholder="6-digit 2FA code"
+                maxlength="6"
+                inputmode="numeric"
+                style="display: none; margin-top: 15px;"
+        />
+
+        <div style="margin: 20px 0;">
+            <button type="button" id="login">Login</button>
+            <button type="button" id="register">Register</button>
+        </div>
+        <p id="auth-msg" style="color: red;"></p>
     </div>
 
-    <!-- Main app (hidden until login) -->
+    <!-- MAIN APP -->
     <div id="app" class="hidden">
         <button id="logout">Logout</button>
         <h2>Your Passwords</h2>
 
         <div class="add-form">
-            <input type="text" id="site" placeholder="Site (e.g. github.com)" required/>
+            <input type="text" id="site" placeholder="Site" required/>
             <input type="text" id="username" placeholder="Username" required/>
-
-            <!-- Password + Generate button on the same line -->
             <div style="display: flex; gap: 10px; margin: 15px 0; align-items: center;">
                 <input
                         type="password"
@@ -36,27 +47,35 @@
                         placeholder="Password"
                         required
                         style="flex: 1; padding: 12px; font-size: 16px;"
-                />
+                        oninput="updateStrengthMeter()"/>
                 <button
                         type="button"
                         id="generate"
-                        style="width: 10%; min-width: 160px; padding: 12px 20px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; white-space: nowrap;"
-                >
-                    Generate Strong
+                        style="width: 150px; padding: 12px 20px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 15px; cursor: pointer;">
+                    Generate
                 </button>
             </div>
-
-            <!-- Strength meter -->
-            <div id="strength-container" style="margin: 10px 0; display: none;">
+            <!-- Strength meter – visible when typing -->
+            <!-- Strength meter – always visible, updates live -->
+            <div id="strength-container" style="margin: 15px 0;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden;">
-                        <div id="strength-bar" style="height: 100%; width: 0%; transition: all 0.4s ease;"></div>
+                    <div style="flex: 1; height: 10px; background: #eee; border-radius: 5px; overflow: hidden;">
+                        <div id="strength-bar"
+                             style="height: 100%; width: 0%; background: #ddd; transition: width 0.4s ease, background-color 0.4s ease;"></div>
                     </div>
-                    <span id="strength-text" style="font-size: 14px; min-width: 100px; text-align: right;"></span>
+                    <span id="strength-text" style="font-weight: bold; min-width: 120px; text-align: right;">Enter password</span>
                 </div>
             </div>
-
             <button id="add">Add Password</button>
+        </div>
+
+        <div style="margin: 20px 0; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+            <strong>2FA:</strong> <span id="2fa-status">Check...</span>
+            <button id="toggle-2fa" style="margin-left: 10px;">Enable 2FA</button>
+        </div>
+        <div id="qr-code" style="display:none; text-align:center; margin:20px 0;">
+            <img id="qr-img" style="width:200px; height:200px;"/>
+            <p>Scan with Google Authenticator</p>
         </div>
 
         <ul id="list"></ul>
