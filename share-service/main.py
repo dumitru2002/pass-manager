@@ -18,7 +18,6 @@ def get_db():
     finally:
         db.close()
 
-# ← THIS WAS MISSING — ADD IT!
 def get_current_user(authorization: str = Header(None)):
     if not authorization:
         raise HTTPException(401, "Missing token")

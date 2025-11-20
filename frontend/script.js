@@ -203,7 +203,7 @@ document.getElementById("toggle-2fa").onclick = async () => {
   }
 };
 
-// GENERATE PASSWORD (optional – keep if you have it)
+// GENERATE PASSWORD
 document.getElementById("generate").onclick = () => {
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
   let pass = "";

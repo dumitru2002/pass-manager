@@ -1,4 +1,4 @@
-# Use the same for ALL 4 folders (gateway, auth, vault, audit)
+
 
 FROM python:3.11-slim
 

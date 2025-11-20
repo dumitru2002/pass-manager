@@ -8,7 +8,7 @@ app = FastAPI(title="Password Manager - API Gateway")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],              # In production change to ["http://localhost:8080"]
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,7 +52,7 @@ async def auth_routes(request: Request):
     return await forward(path, request, AUTH_SERVICE)
 
 # ======================
-# Vault routes – FINAL WORKING VERSION
+# Vault routes
 # ======================
 @app.post("/passwords")
 @app.post("/passwords/")

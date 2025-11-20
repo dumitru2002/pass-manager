@@ -3,8 +3,8 @@ uvicorn
 pydantic
 sqlalchemy
 python-jose[cryptodigest]
-bcrypt==4.1.3          # ← this version works perfectly with passlib
-passlib[bcrypt]        # ← now safe
+bcrypt==4.1.3
+passlib[bcrypt]
 python-multipart
 httpx
 pyotp

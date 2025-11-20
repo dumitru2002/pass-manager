@@ -47,7 +47,7 @@ def add(pw: PasswordIn, email: str = Depends(get_current_user), db: Session = De
     )
     db.add(entry)
     db.commit()
-    db.refresh(entry)               # ← this line was missing!
+    db.refresh(entry)
     return {
         "id": entry.id,
         "site": pw.site,
